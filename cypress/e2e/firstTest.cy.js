@@ -45,7 +45,7 @@ describe('Our first suite', () =>{
 
          })
 
-         it.only('second test', () => {
+         it('second test', () => {
             cy.visit('/')
             cy.contains('Forms').click()
             cy.contains('Form Layout').click()
@@ -69,8 +69,55 @@ describe('Our first suite', () =>{
                 .find('[type="email"]')
          })
 
+    it.only('then and wrap methods', () =>{
+        cy.visit('/')
+        cy.contains('Forms').click()
+        cy.contains('Form Layout').click()
+        /*
+        cy.contains('nb-card','Using the Grid')
+            .find('[for="inputEmail1"]')
+            .should('contain','Email')
+
+        cy.contains('nb-card','Using the Grid')
+            .find('[for="inputPassword2"]')
+            .should('contain','Password')
 
 
+            cy.contains('nb-card','Basic form')
+            .find('[for="exampleInputEmail1"]')
+            .should('contain','Email')
+
+        cy.contains('nb-card','Basic form')
+            .find('[for="exampleInputPassword1"]')
+            .should('contain','Password')
+
+        */
+            //JQuery method
+        cy.contains('nb-card','Using the Grid').then(firstForm =>{  // rozszerzenie: function SmeName(firstForm)
+            const emailLabelFirst = firstForm.find('[for="inputEmail1"]').text()
+            const passwordLabelFirst = firstForm.find('[for="inputPassword2"]').text()
+            expect(emailLabelFirst).to.equal('Email')
+            expect(passwordLabelFirst).to.equal('Password')
+
+            cy.contains('nb-card', 'Basic form').then (secondForm => {
+                const  emailLabelSecond = secondForm.find('[for="exampleInputEmail1"]').text()
+                const  passwordLabelSecond = secondForm.find('[for="exampleInputPassword1"]').text()
+                expect(emailLabelSecond).to.equal('Email address')
+                expect(passwordLabelSecond).to.equal('Password')
+
+                //if you whant to convert your code back to the cypress format from JQuery you have to use wrap
+
+                cy. wrap(secondForm).find('[for="exampleInputPassword1"]').should('contain','Password')
+
+
+
+            })
+        })
+
+
+
+    })
+    
 
  
 })
