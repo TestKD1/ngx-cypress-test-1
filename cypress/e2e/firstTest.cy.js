@@ -186,7 +186,7 @@ describe('Our first suite', () =>{
     })
 
 
-    it.only('lists and dropdowns', () =>{
+    it('lists and dropdowns', () =>{
         cy.visit('/')
         
         //1
@@ -222,5 +222,43 @@ describe('Our first suite', () =>{
 
     })
 
- 
+    it('tooltip', () => {
+        cy.visit('/')
+        cy.contains('Modal & Overlays').click()
+        cy.contains('Tooltip').click()
+
+        cy.contains('nb-card', 'Colored Tooltips')
+            .contains('Default').click()
+        cy.get('nb-tooltip').should('contain','This is a tooltip')
+    })
+
+    it.only('dialog box', () => {
+        cy.visit('/')
+        cy.contains('Tables & Data').click()
+        cy.contains('Smart Table').click()
+
+        //1(it is not good)
+       // cy.get('tbody tr').first().find('.nb-trash').click()
+        //cy.on('window:confirm', () =>{
+       //     expected(confirm).to.equal('Are you sure you want to delate?')
+       // })
+
+        //2 better
+        const stub = cy.stub()
+        cy.on('window:confirm', stub)
+        cy.get('tbody tr').first().find('.nb-trash').click().then(()=>{
+                expect(stub.getCall(0)).to.be.calledWith('Are you sure you want to delete?')
+
+
+        })
+
+        //how cancel this popup
+        cy.get('tbody tr').first().find('.nb-trash').click()
+        cy.on('window:confirm', () => false)
+
+
+
+
+
+    })
 })
